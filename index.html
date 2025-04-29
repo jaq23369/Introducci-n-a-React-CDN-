@@ -1,0 +1,78 @@
+<!DOCTYPE html >
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intro a React con CDN</title>
+
+    <!---------React-------->
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+
+     <!---------ReactDOM-------->
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+
+    <!---------Babel para procesar JSX-------->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+</head>
+<body>
+    <!---------Aquí React montará la app-------->
+    <div id="root"></div>
+
+    <!---------Aquí va el JSX-------->
+    <script type="text/babel">
+        
+        // Componente Hijo: Este se encargara de mostrar un formulario para agregar tareas
+        function CommentForm({onAddTask }) {
+            const [inputValue, setInputValue] = React.useState('');
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                if (inputValue.trim() !== '') {
+                    onAddTask(inputValue);
+                    setInputValue('');
+                }
+            };
+
+            return (
+                <form onSubmit={handleSubmit}>
+                    <input
+                        type="text"
+                        placeholder="Escribe una tarea..."
+                        value={inputValue}
+                        onChange={(e) => setInputValue(e.target.value)}
+                    />
+                    <button type="submit">Agregar tarea</button>
+                </form>
+            );
+        }
+
+        // Componente Padre o principal: Este se encargara de manejar el estado de las tareas
+        function App(){
+            const [tasks, setTasks] = React.useState([]);
+
+            const addTask = (newTask) => {
+                setTasks([...tasks, newTask]);
+            };
+
+            return (
+                <div>
+                    <h1>¡Hola, bienvenido a React con CDN!</h1>
+                    <h2>Mi To Do List</h2>
+                    <CommentForm onAddTask={addTask} />
+                    <ul>
+                        {tasks.map((task, index) => (
+                            <li key={index}>{task}</li>
+                        ))}
+                    </ul>
+                </div>
+            );
+        }
+
+        //Renderización de la app en root
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+
+</body>
+</html>
